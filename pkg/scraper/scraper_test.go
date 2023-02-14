@@ -21,8 +21,16 @@ func TestReadPageContent(t *testing.T) {
 		t.Fatalf("error reading testfile %s: %s", filename, err)
 	}
 
-	html, _ := htmlquery.Parse(strings.NewReader(string(content)))
-	got := scraper.ParsePage(html)
+	html, err := htmlquery.Parse(strings.NewReader(string(content)))
+	if err != nil {
+		t.Fatal("could not open the file")
+	}
+
+	got, err := scraper.ParsePage(html)
+
+	if err != nil {
+		t.Fatal("Error while parsing the html")
+	}
 	want := scraper.Page{
 		Title: "dumb down",
 		Definitions: []scraper.Definition{
